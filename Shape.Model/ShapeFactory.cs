@@ -1,10 +1,13 @@
-﻿using System.Windows;
+﻿using System.Globalization;
+using System.Windows;
 using System.Windows.Media;
+using Sim.Core;
 using Vector.Lib;
 
 namespace Shape.Model;
 
-public class ShapeFactory : IShapeFactory
+public class ShapeFactory
+    : IShapeFactory
 {
     private const string BlackBallTextFlag = "black";
     private const string BlackBallImage = @"Images\ball8.bmp";
@@ -18,20 +21,16 @@ public class ShapeFactory : IShapeFactory
         double width = 100,
         double height = 100)
     {
-        IShape shape = null;
         switch (shapeType)
         {
             case ShapeTypes.Circle:
-                shape = GetCircle(color, isColorFilled, radius);
-                break;
+                return GetCircle(color, isColorFilled, radius);
             case ShapeTypes.Rectangle:
-                shape = GetRectangle(color, isColorFilled, width, height);
-                break;
+                return GetRectangle(color, isColorFilled, width, height);
             case ShapeTypes.Line:
-                shape = GetLine(color);
-                break;
+                return GetLine(color);
         }
-        return shape;
+        throw new InvalidOperationException(nameof(GetShape));
     }
 
     private ICircle GetCircle(Color color, bool filled, double radius) => new Circle()
@@ -63,25 +62,21 @@ public class ShapeFactory : IShapeFactory
         double height = 100,
         string relativeImagePath = "")
     {
-        IShape shape = null;
         switch (shapeType)
         {
             case ShapeTypes.Circle:
-                shape = GetCircle(context, massCenter, color,
+                return GetCircle(context, massCenter, color,
                     textFlag, isColorFilled, radius,
                     relativeImagePath);
-                break;
             case ShapeTypes.Rectangle:
-                shape = GetRectangle(context, massCenter, color,
+                return GetRectangle(context, massCenter, color,
                     isColorFilled, width, height,
                     relativeImagePath);
-                break;
             case ShapeTypes.Line:
-                shape = GetLine(context, massCenter, color,
+                return GetLine(context, massCenter, color,
                     relativeImagePath);
-                break;
         }
-        return shape;
+        throw new InvalidOperationException(nameof(GetShape));
     }
 
     private ICircle GetCircle(Context context, Point massCenter, Color color, string textFlag, bool isColorFilled, double radius, string relativeImagePath) => new Circle(massCenter)
@@ -151,10 +146,10 @@ public class ShapeFactory : IShapeFactory
     public ILine GetVelocityVector(
         Vector2 massCenter,
         Vector2 secondPoint,
-        Color color = default) =>
+        Color color) =>
         new Line()
         {
-            Color = color == null ? Colors.Black : color,
+            Color = color,
             IsColorFilled = true,
             MassCenter = massCenter,
             SecondPoint = secondPoint,
@@ -163,7 +158,7 @@ public class ShapeFactory : IShapeFactory
 
     public ICircle GetCircleMarker(
         Vector2 center,
-        Color color = default) => new Circle()
+        Color color) => new Circle()
         {
             Radius = 3,
             Color = color,

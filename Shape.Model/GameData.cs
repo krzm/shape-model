@@ -1,9 +1,11 @@
 ﻿using System.Collections.Concurrent;
 using System.Windows;
+using Sim.Core;
 
 namespace Shape.Model;
 
-public class GameData : ContextBoundObject
+public class GameData
+    : ContextBoundObject
     , IGameData
 {
     private readonly ISerializer _dataSerialization;
@@ -21,7 +23,7 @@ public class GameData : ContextBoundObject
     public List<IShape> Sinks =>
         (from shape in Shapes where shape.Context == Context.Logic && shape is Circle select shape).ToList();
 
-    public BlockingCollection<IShape> VectorAnalitics { get; set; } = null;
+    public BlockingCollection<IShape>? VectorAnalitics { get; set; }
 
     public GameData(
         ISerializer dataSerialization

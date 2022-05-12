@@ -3,13 +3,16 @@ using System.Windows;
 using System.Xml.Schema;
 using System.Xml;
 using System.Globalization;
+using Sim.Core;
 
 namespace Shape.Model;
 
-public class Rectangle : Shape, IRectangle
+public class Rectangle
+    : Shape
+    , IRectangle
 {
-    private DrawingVisual _drawingVisual;
-    private DrawingContext _drawingContext;
+    private DrawingVisual? drawingVisual;
+    private DrawingContext? drawingContext;
     private Rect _rect;
 
     public Size Size { get; set; }
@@ -18,7 +21,7 @@ public class Rectangle : Shape, IRectangle
 
     private void Initialize()
     {
-        _drawingVisual = new DrawingVisual();
+        drawingVisual = new DrawingVisual();
         Size = new Size(100, 100);
         _rect = new Rect();
     }
@@ -28,20 +31,22 @@ public class Rectangle : Shape, IRectangle
     public override Visual GetVisual()
     {
         UpdateVisual();
-        return _drawingVisual;
+        ArgumentNullException.ThrowIfNull(drawingVisual);
+        return drawingVisual;
     }
 
     public override void UpdateVisual()
     {
-        _drawingContext = _drawingVisual.RenderOpen();
+        drawingContext = drawingVisual?.RenderOpen();
         SetShape();
         DrawShape();
-        _drawingContext.Close();
+        drawingContext?.Close();
     }
 
     private void SetShape()
     {
-        _rect.Location = MassCenterPoint;
+        ArgumentNullException.ThrowIfNull(MassCenterPoint);
+        _rect.Location = MassCenterPoint.Value;
         _rect.Size = Size;
     }
 
@@ -60,26 +65,26 @@ public class Rectangle : Shape, IRectangle
     private void DrawFilledShape()
     {
         if (string.IsNullOrWhiteSpace(RelativeImagePath))
-            _drawingContext.DrawRectangle(GetSolidColorBrush(),
+            drawingContext?.DrawRectangle(GetSolidColorBrush(),
                 null,
                 _rect);
         else
-            _drawingContext.DrawRectangle(GetImageBrush(),
+            drawingContext?.DrawRectangle(GetImageBrush(),
                 null,
                 _rect);
     }
 
     private void DrawWireShape() =>
-        _drawingContext.DrawRectangle(null, GetColorPen(), _rect);
+        drawingContext?.DrawRectangle(null, GetColorPen(), _rect);
 
     public override string ToString() => base.ToString() +
         $"{nameof(Size)}={Size.ToString()}{Environment.NewLine}";
 
     public override int GetHashCode() => ToString().GetHashCode();
 
-    public override bool Equals(object theObject) => ToString().Equals(theObject.ToString());
+    public override bool Equals(object? theObject) => ToString().Equals(theObject?.ToString());
 
-    public override XmlSchema GetSchema() => null;
+    public override XmlSchema GetSchema() => new XmlSchema();
 
     public override void ReadXml(XmlReader reader)
     {

@@ -1,9 +1,11 @@
 ﻿using System.Windows;
 using System.Windows.Media;
+using Sim.Core;
 
 namespace Shape.Model;
 
-public class GroupFactory : IGroupFactory
+public class GroupFactory
+    : IGroupFactory
 {
     private readonly IShapeFactory _shapeFactory;
 
@@ -12,14 +14,12 @@ public class GroupFactory : IGroupFactory
 
     public IShapeGroup GetShape(SelectedGroup selectedGroup, Point massCenter)
     {
-        IShapeGroup ShapeGroup = null;
         switch (selectedGroup)
         {
             case SelectedGroup.CircleAnaliticsGroup:
-                ShapeGroup = GetCircleAnaliticsGroup(massCenter);
-                break;
+                return GetCircleAnaliticsGroup(massCenter);
         }
-        return ShapeGroup;
+        throw new InvalidOperationException(nameof(GetShape));
     }
 
     private IShapeGroup GetCircleAnaliticsGroup(Point mc)
@@ -43,12 +43,15 @@ public class GroupFactory : IGroupFactory
             textFlag: string.Empty,
             isColorFilled: false);
 
-    private IShape GetVelocity(IShape circle) =>
-        _shapeFactory.GetShape(
+    private IShape GetVelocity(IShape circle)
+    {
+        ArgumentNullException.ThrowIfNull(circle.MassCenterPoint);
+        return _shapeFactory.GetShape(
             ShapeTypes.Line,
             Context.Graphic,
-            circle.MassCenterPoint,
+            circle.MassCenterPoint.Value,
             Colors.Red,
             textFlag: string.Empty,
             isColorFilled: false);
+    }  
 }

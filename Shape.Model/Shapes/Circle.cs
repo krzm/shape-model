@@ -4,33 +4,38 @@ using System.Windows.Media;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Sim.Core;
 
 namespace Shape.Model;
 
-public class Circle : Shape, ICircle, IXmlSerializable
+public class Circle 
+    : Shape
+    , ICircle
+    , IXmlSerializable
 {
-    private DrawingVisual _drawingVisual;
-    private DrawingContext _drawingContext;
+    private DrawingVisual? drawingVisual;
+    private DrawingContext? drawingContext;
 
     public double Radius { get; set; }
 
     public Circle() : base() => Initialize();
 
-    private void Initialize() => _drawingVisual = new DrawingVisual();
+    private void Initialize() => drawingVisual = new DrawingVisual();
 
     public Circle(Point massCenter) : base(massCenter) => Initialize();
 
     public override Visual GetVisual()
     {
         UpdateVisual();
-        return _drawingVisual;
+        ArgumentNullException.ThrowIfNull(drawingVisual);
+        return drawingVisual;
     }
 
     public override void UpdateVisual()
     {
-        _drawingContext = _drawingVisual.RenderOpen();
+        drawingContext = drawingVisual?.RenderOpen();
         DrawShape();
-        _drawingContext.Close();
+        drawingContext?.Close();
     }
 
     private void DrawShape()
@@ -47,34 +52,42 @@ public class Circle : Shape, ICircle, IXmlSerializable
 
     private void DrawFilledShape()
     {
+        ArgumentNullException.ThrowIfNull(MassCenterPoint);
         if (RelativeImagePath == string.Empty)
-            _drawingContext.DrawEllipse(GetSolidColorBrush(),
+            drawingContext?.DrawEllipse(
+                GetSolidColorBrush(),
                 null,
-                MassCenterPoint,
+                MassCenterPoint.Value,
                 Radius,
                 Radius);
         else
-            _drawingContext.DrawEllipse(GetImageBrush(),
+            drawingContext?.DrawEllipse(
+                GetImageBrush(),
                 null,
-                MassCenterPoint,
+                MassCenterPoint.Value,
                 Radius,
                 Radius);
     }
 
-    private void DrawWireShape() => _drawingContext.DrawEllipse(null,
-                            GetColorPen(),
-                            MassCenterPoint,
-                            Radius,
-                            Radius);
+    private void DrawWireShape()
+    {
+        ArgumentNullException.ThrowIfNull(MassCenterPoint);
+        drawingContext?.DrawEllipse(
+            null,
+            GetColorPen(),
+            MassCenterPoint.Value,
+            Radius,
+            Radius);
+    }
 
     public override string ToString() => base.ToString() +
         $"{nameof(Radius)}={Radius}{Environment.NewLine}";
 
     public override int GetHashCode() => ToString().GetHashCode();
 
-    public override bool Equals(object model) => ToString().Equals(model.ToString());
+    public override bool Equals(object? model) => ToString().Equals(model?.ToString());
 
-    public override XmlSchema GetSchema() => null;
+    public override XmlSchema GetSchema() => new XmlSchema();
 
     public override void ReadXml(XmlReader reader)
     {

@@ -5,6 +5,7 @@ using System.Windows.Media.Imaging;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Sim.Core;
 using Vector.Lib;
 
 namespace Shape.Model;
@@ -13,15 +14,16 @@ namespace Shape.Model;
 [XmlInclude(typeof(Circle))]
 [XmlInclude(typeof(Rectangle))]
 [XmlInclude(typeof(Line))]
-public abstract class Shape : IShape,
-    IXmlSerializable
+public abstract class Shape 
+    : IShape
+    , IXmlSerializable
 {
-    protected Point MassCenterPointField;
-    private SolidColorBrush _solidColorBrush;
-    private ImageBrush _imageBrush;
-    private Pen _pen;
+    protected Point? MassCenterPointField;
+    private SolidColorBrush? solidColorBrush;
+    private ImageBrush? imageBrush;
+    private Pen? pen;
 
-    public string TextFlag { get; set; }
+    public string? TextFlag { get; set; }
 
     public Context Context { get; set; }
 
@@ -35,9 +37,9 @@ public abstract class Shape : IShape,
 
     public double Mass { get; set; }
 
-    public string RelativeImagePath { get; set; }
+    public string? RelativeImagePath { get; set; }
 
-    public Point MassCenterPoint
+    public Point? MassCenterPoint
     {
         get
         {
@@ -56,7 +58,7 @@ public abstract class Shape : IShape,
         MassCenterPointField = massCenter;
     }
 
-    public virtual Visual GetVisual() => default;
+    public virtual Visual GetVisual() => default!;
 
     public virtual void UpdateVisual() { }
 
@@ -72,9 +74,9 @@ public abstract class Shape : IShape,
 
     public override int GetHashCode() => ToString().GetHashCode();
 
-    public override bool Equals(object model) => ToString().Equals(model.ToString());
+    public override bool Equals(object? model) => ToString().Equals(model?.ToString());
 
-    public virtual XmlSchema GetSchema() => null;
+    public virtual XmlSchema GetSchema() => new XmlSchema();
 
     public virtual void ReadXml(XmlReader reader)
     {
@@ -147,28 +149,29 @@ public abstract class Shape : IShape,
 
     protected SolidColorBrush GetSolidColorBrush()
     {
-        if (_solidColorBrush == null)
+        if (solidColorBrush == null)
         {
-            _solidColorBrush = new SolidColorBrush(Color);
+            solidColorBrush = new SolidColorBrush(Color);
         }
-        return _solidColorBrush;
+        return solidColorBrush;
     }
 
     protected ImageBrush GetImageBrush()
     {
-        if (_imageBrush == null && !string.IsNullOrEmpty(RelativeImagePath))
+        if (imageBrush == null && !string.IsNullOrEmpty(RelativeImagePath))
         {
-            _imageBrush = new ImageBrush(new BitmapImage(new Uri(RelativeImagePath, UriKind.Relative)));
+            imageBrush = new ImageBrush(new BitmapImage(new Uri(RelativeImagePath, UriKind.Relative)));
         }
-        return _imageBrush;
+        ArgumentNullException.ThrowIfNull(imageBrush);
+        return imageBrush;
     }
 
     protected Pen GetColorPen()
     {
-        if (_pen == null)
+        if (pen == null)
         {
-            _pen = new Pen(GetSolidColorBrush(), 1.0);
+            pen = new Pen(GetSolidColorBrush(), 1.0);
         }
-        return _pen;
+        return pen;
     }
 }

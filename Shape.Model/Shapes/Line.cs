@@ -4,16 +4,19 @@ using System.Windows.Media;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Sim.Core;
 using Vector.Lib;
 
 namespace Shape.Model;
 
-public class Line : Shape, ILine,
-    IXmlSerializable
+public class Line
+    : Shape
+    , ILine
+    , IXmlSerializable
 {
-    private DrawingVisual _drawingVisual;
+    private DrawingVisual? drawingVisual;
 
-    private DrawingContext _drawingContext;
+    private DrawingContext? drawingContext;
 
     public Vector2 SecondPoint { get; set; }
 
@@ -21,33 +24,38 @@ public class Line : Shape, ILine,
 
     public Line() : base() => Initialize();
 
-    private void Initialize() => _drawingVisual = new DrawingVisual();
+    private void Initialize() => drawingVisual = new DrawingVisual();
 
     public Line(Point massCenter) : base(massCenter) => Initialize();
 
     public override Visual GetVisual()
     {
         UpdateVisual();
-        return _drawingVisual;
+        ArgumentNullException.ThrowIfNull(drawingVisual);
+        return drawingVisual;
     }
 
     public override void UpdateVisual()
     {
-        _drawingContext = _drawingVisual.RenderOpen();
+        drawingContext = drawingVisual?.RenderOpen();
         DrawShape();
-        _drawingContext.Close();
+        drawingContext?.Close();
     }
 
-    private void DrawShape() => _drawingContext.DrawLine(GetColorPen(), MassCenterPoint, SecondPoint2D);
-
+    private void DrawShape()
+    {
+        ArgumentNullException.ThrowIfNull(MassCenterPoint);
+        drawingContext?.DrawLine(GetColorPen(), MassCenterPoint.Value, SecondPoint2D);
+    }
+    
     public override string ToString() => base.ToString() +
         $"{nameof(SecondPoint)}={SecondPoint}{Environment.NewLine}";
 
     public override int GetHashCode() => ToString().GetHashCode();
 
-    public override bool Equals(object theObject) => ToString().Equals(theObject.ToString());
+    public override bool Equals(object? theObject) => ToString().Equals(theObject?.ToString());
 
-    public override XmlSchema GetSchema() => null;
+    public override XmlSchema GetSchema() => new XmlSchema();
 
     public override void ReadXml(XmlReader reader)
     {

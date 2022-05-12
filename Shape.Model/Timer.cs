@@ -1,8 +1,10 @@
 ﻿using System.Diagnostics;
+using Sim.Core;
 
 namespace Shape.Model;
 
-public class Timer : ITimer
+public class Timer
+    : ITimer
 {
     private readonly Stopwatch _stopWatch;
 

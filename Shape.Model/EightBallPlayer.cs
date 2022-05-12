@@ -1,6 +1,9 @@
-﻿namespace Shape.Model;
+﻿using Sim.Core;
 
-public class EightBallPlayer : Player
+namespace Shape.Model;
+
+public class EightBallPlayer
+    : Player
 {
     private int _score;
 
