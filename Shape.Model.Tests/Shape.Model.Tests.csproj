@@ -32,5 +32,8 @@
         <Reference Include="Sim.Core">
             <HintPath>..\..\sim-core\Sim.Core\bin\Debug\net6.0-windows\Sim.Core.dll</HintPath>
         </Reference>
+        <Reference Include="Vector.Lib">
+            <HintPath>..\..\vector-lib\Vector.Lib\bin\Debug\net6.0\Vector.Lib.dll</HintPath>
+        </Reference>
 	</ItemGroup>
 </Project>
