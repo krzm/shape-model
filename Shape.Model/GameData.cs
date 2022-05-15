@@ -8,9 +8,9 @@ public class GameData
     : ContextBoundObject
     , IGameData
 {
-    private readonly ISerializer _dataSerialization;
-    private readonly string _filePath;
-    private readonly string _fileError;
+    private readonly ISerializer dataSerialization;
+    private readonly string filePath;
+    private readonly string fileError;
 
     public List<IShape> Shapes { get; private set; } = new List<IShape>();
 
@@ -29,9 +29,9 @@ public class GameData
         ISerializer dataSerialization
         , string filePath)
     {
-        _dataSerialization = dataSerialization;
-        _filePath = filePath;
-        _fileError = $"Deserializacja {_filePath} nie powiodła się sprawdź czy plik znajduje się w folderze programu";
+        this.dataSerialization = dataSerialization;
+        this.filePath = filePath;
+        fileError = $"Deserializacja {this.filePath} nie powiodła się sprawdź czy plik znajduje się w folderze programu";
         TryInitialize();
     }
 
@@ -39,12 +39,12 @@ public class GameData
     {
         try
         {
-            var serializableShapes = _dataSerialization.Deserialize<ShapeContext>(_filePath);
+            var serializableShapes = dataSerialization.Deserialize<ShapeContext>(filePath);
             Shapes.AddRange(serializableShapes.Shapes);
         }
         catch (Exception exception)
         {
-            MessageBox.Show($"{_fileError}{Environment.NewLine}{exception.Message}");
+            MessageBox.Show($"{fileError}{Environment.NewLine}{exception.Message}");
         }
     }
 }

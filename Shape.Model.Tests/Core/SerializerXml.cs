@@ -4,7 +4,8 @@ using System.Xml.Serialization;
 
 namespace Shape.Model.Tests;
 
-public class SerializerXml : Serializer
+public class SerializerXml
+    : Serializer
 {
     public override string ToString() => nameof(SerializerXml);
 
