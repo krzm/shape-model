@@ -3,6 +3,7 @@
 namespace Shape.Model.Tests;
 
 public interface IComponentBuilders<TComponents>
+    where TComponents : notnull
 {
     Dictionary<TComponents, IXmlBuilder<XmlObjectParts>> Builders { get; }
 
