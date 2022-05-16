@@ -9,7 +9,7 @@ public abstract class FileReader
 
     public int IgnoreFirstXLines { get; set; }
 
-    public string[] IgnoreLineContainingValue { get; set; }
+    public string[]? IgnoreLineContainingValue { get; set; }
 
     public string OutputAsString => ConvertLinesToString();
 

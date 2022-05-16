@@ -6,7 +6,7 @@ public interface IFileReader
 {
     int IgnoreFirstXLines { get; set; }
 
-    string[] IgnoreLineContainingValue { get; set; }
+    string[]? IgnoreLineContainingValue { get; set; }
 
     void ReadingData();
 }

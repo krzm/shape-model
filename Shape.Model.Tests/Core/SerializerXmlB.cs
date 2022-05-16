@@ -13,10 +13,9 @@ public class SerializerXmlB
         TType data;
         using (var streamIn = new System.IO.FileStream(filePath, System.IO.FileMode.Open))
         {
-            data = (TType)serializer.Deserialize
-            (
-                streamIn
-            );
+            var obj = serializer.Deserialize(streamIn);
+            ArgumentNullException.ThrowIfNull(obj);
+            data = (TType)obj;
         }
         return data;
     }

@@ -3,30 +3,30 @@
 public class TextFileReader
     : FileReader
 {
-    private readonly IFilePath _filePath;
+    private readonly IFilePath? filePath;
 
-    private int _lineNr;
+    private int lineNr;
 
-    private string _line;
+    private string? line;
 
     public TextFileReader(
-        IFilePath filePath) => _filePath = filePath;
+        IFilePath filePath) => this.filePath = filePath;
 
     public override void ReadingData()
     {
-        if (string.IsNullOrWhiteSpace(_filePath.FullPath)) return;
+        if (string.IsNullOrWhiteSpace(filePath?.FullPath)) return;
         Reset();
-        using (var reader = new StreamReader(_filePath.FullPath))
+        using (var reader = new StreamReader(filePath.FullPath))
         {
-            _lineNr = 0;
+            lineNr = 0;
             while (!reader.EndOfStream)
             {
-                _line = reader.ReadLine();
+                line = reader.ReadLine();
                 if (IsFromIgnoredHeader() &&
                     !IsContainingIgnoredValues() &&
-                    !string.IsNullOrWhiteSpace(_line))
-                    Output.Add(_line.TrimEnd(','));
-                _lineNr++;
+                    !string.IsNullOrWhiteSpace(line))
+                    Output.Add(line.TrimEnd(','));
+                lineNr++;
             }
         }
     }
@@ -35,14 +35,17 @@ public class TextFileReader
         Output.Clear();
 
     private bool IsFromIgnoredHeader() =>
-        _lineNr > IgnoreFirstXLines - 1;
+        lineNr > IgnoreFirstXLines - 1;
 
-    private bool IsContainingIgnoredValues() =>
-        IsIgnoreEmpty() ?
-        false :
-        IgnoreLineContainingValue.Any(value => _line.Contains(value));
-
-    private bool IsIgnoreEmpty() =>
-        IgnoreLineContainingValue == null ||
-        IgnoreLineContainingValue.Length == 0;
+    private bool IsContainingIgnoredValues()
+    {
+        if(IsIgnoreOrLineEmpty())
+            return false;
+        return IgnoreLineContainingValue!.Any(value => line!.Contains(value));
+    }
+       
+    private bool IsIgnoreOrLineEmpty() =>
+        IgnoreLineContainingValue == null 
+        || IgnoreLineContainingValue.Length == 0
+        || string.IsNullOrWhiteSpace(line);
 }

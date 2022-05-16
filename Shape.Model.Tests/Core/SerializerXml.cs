@@ -30,6 +30,7 @@ public class SerializerXml
         using (Stream stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
         {
             var obj = serializer.Deserialize(stream);
+            ArgumentNullException.ThrowIfNull(obj);
             data = (TType)obj;
         }
         return data;

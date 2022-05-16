@@ -14,9 +14,9 @@ public abstract class Serializer
         }
         catch (Exception exception)
         {
-            //todo: interfejs do logowania (mój ogólny do podpięcia nloga)
+            //todo: add logger
             Debug.WriteLine(exception.Message);
-            return default;
+            throw;
         }
     }
 
