@@ -7,7 +7,8 @@ public class VelocityData
 {
     public VelocityData(
         int order
-        , List<XmlPropertyData> propertiesData) : base(order, propertiesData)
+        , List<XmlPropertyData> propertiesData)
+            : base(order, propertiesData)
     {
     }
 
@@ -15,13 +16,15 @@ public class VelocityData
         string startLine
         , string stopLine
         , int order
-        , List<XmlPropertyData> propertiesData) : base(startLine, stopLine, order, propertiesData)
+        , List<XmlPropertyData> propertiesData)
+            : base(startLine, stopLine, order, propertiesData)
     {
     }
 
     protected override void BuildBasicParts()
     {
         base.BuildBasicParts();
+        ArgumentNullException.ThrowIfNull(BasicParts);
         BasicParts[XmlObjectParts.ObjectName] = "Velocity";
     }
 }

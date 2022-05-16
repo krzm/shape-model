@@ -7,7 +7,8 @@ public class ColorData
 {
     public ColorData(
         int order
-        , List<XmlPropertyData> propertiesData) : base(order, propertiesData)
+        , List<XmlPropertyData> propertiesData)
+            : base(order, propertiesData)
     {
     }
 
@@ -15,13 +16,15 @@ public class ColorData
         string startLine
         , string stopLine
         , int order
-        , List<XmlPropertyData> propertyData) : base(startLine, stopLine, order, propertyData)
+        , List<XmlPropertyData> propertyData)
+            : base(startLine, stopLine, order, propertyData)
     {
     }
 
     protected override void BuildBasicParts()
     {
         base.BuildBasicParts();
+        ArgumentNullException.ThrowIfNull(BasicParts);
         BasicParts[XmlObjectParts.ObjectName] = "Color";
     }
 }
