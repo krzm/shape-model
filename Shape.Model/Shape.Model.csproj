@@ -22,9 +22,7 @@
 		<Reference Include="Vector.Lib">
 			<HintPath>..\..\..\Build\vector-lib\Vector.Lib\Vector.Lib.dll</HintPath>
 		</Reference>
-	</ItemGroup>
-    <ItemGroup>
-		<Reference Include="Sim.Core">
+        <Reference Include="Sim.Core">
 			<HintPath>..\..\..\Build\sim-core\Sim.Core\Sim.Core.dll</HintPath>
 		</Reference>
 	</ItemGroup>
