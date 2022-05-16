@@ -5,11 +5,11 @@ public abstract class TestTemplate<TType>
 {
     public event Action TestActionEvent;
 
-    public event Action<string> AssertFailEvent;
+    public event Action<string>? AssertFailEvent;
 
     public TType Expected { get; protected set; }
 
-    public TType Acctual { get; protected set; }
+    public TType? Acctual { get; protected set; }
 
     public TestTemplate(
         TType expected)
@@ -26,7 +26,7 @@ public abstract class TestTemplate<TType>
         }
         catch (Exception exception)
         {
-            AssertFailEvent.Invoke(exception.Message);
+            AssertFailEvent?.Invoke(exception.Message);
         }
         finally
         {

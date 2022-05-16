@@ -5,23 +5,23 @@ namespace Shape.Model.Tests;
 public class DeserializationTestScheme<TType>
     : IDeserializationTestScheme<TType>
 {
-    private readonly ISerializer _serializer;
+    private readonly ISerializer serializer;
 
     public IText Text { get; }
 
-    public TType DeserializedObject { get; private set; }
+    public TType? DeserializedObject { get; private set; }
 
     public DeserializationTestScheme(
         ISerializer serializer,
         IText text)
     {
-        _serializer = serializer;
+        this.serializer = serializer;
         Text = text;
     }
 
     public void TestingDeserialization(string fileName)
     {
         File.WriteAllText(fileName, Text.Text);
-        DeserializedObject = _serializer.Deserialize<TType>(fileName);
+        DeserializedObject = serializer.Deserialize<TType>(fileName);
     }
 }

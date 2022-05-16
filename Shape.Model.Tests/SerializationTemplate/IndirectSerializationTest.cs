@@ -3,14 +3,15 @@
 public abstract class IndirectSerializationTest<TMediatorType, TImmutableType>
     : FileTestTemplate<TImmutableType>
 {
-    private readonly ISerializer _serializer;
-
-    protected TMediatorType DeserializedMediator;
+    private readonly ISerializer serializer;
+    protected TMediatorType? DeserializedMediator;
 
     protected IndirectSerializationTest(
         IFilePath filePath,
         ISerializer serializer,
-        TImmutableType expected) : base(filePath, expected) => _serializer = serializer;
+        TImmutableType expected)
+            : base(filePath, expected) => 
+                this.serializer = serializer;
 
     protected override void Testing()
     {
@@ -22,8 +23,8 @@ public abstract class IndirectSerializationTest<TMediatorType, TImmutableType>
 
     private void SerializeMediator(TMediatorType serializableObject)
     {
-        _serializer.Serialize(serializableObject, FilePath.FullPath);
-        DeserializedMediator = _serializer.Deserialize<TMediatorType>(FilePath.FullPath);
+        serializer.Serialize(serializableObject, FilePath.FullPath);
+        DeserializedMediator = serializer.Deserialize<TMediatorType>(FilePath.FullPath);
     }
 
     protected abstract TImmutableType CreateImmutableType();

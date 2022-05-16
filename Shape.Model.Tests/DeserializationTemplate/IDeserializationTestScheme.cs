@@ -6,7 +6,7 @@ public interface IDeserializationTestScheme<TType>
 {
     IText Text { get; }
 
-    TType DeserializedObject { get; }
+    TType? DeserializedObject { get; }
 
     void TestingDeserialization(string fileName);
 }
