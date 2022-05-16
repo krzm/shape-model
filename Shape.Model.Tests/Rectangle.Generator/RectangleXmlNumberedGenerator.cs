@@ -5,7 +5,7 @@ namespace Shape.Model.Tests;
 public class RectangleXmlNumberedGenerator
     : IText
 {
-    private readonly IComponents<RectangleComponents, IXmlSerializedObjectData> _composite;
+    private readonly IComponents<RectangleComponents, IXmlSerializedObjectData>? composite;
     private readonly IComponentBuilders<RectangleComponents> componentBuilders;
     private readonly IXmlCompositeObjectBuilder objectBuilder;
     private readonly IComponents<XmlFileParts, string> fileComposite;
@@ -13,10 +13,14 @@ public class RectangleXmlNumberedGenerator
 
     public RectangleXmlNumberedGenerator()
     {
-        _composite = new RectangleNumberedComposite();
-        componentBuilders = new RectangleComponentNumberedBuilders(_composite
+        composite = new RectangleNumberedComposite();
+        componentBuilders = new RectangleComponentNumberedBuilders(composite
             , (property) => new XmlPropertyNumberedParser(property));
         componentBuilders.Build();
+        var color = composite?.Components[RectangleComponents.Color];
+        ArgumentNullException.ThrowIfNull(color?.BasicParts);
+        var position = color?.BasicParts[XmlObjectParts.ObjectPosition];
+        ArgumentNullException.ThrowIfNull(position);
         objectBuilder = new XmlCompositeObjectNumberedBuilder(
             (parsers, innerObjOrder) => new XmlObjectNumbered(parsers) { InnerObjectPosition = innerObjOrder }
             , componentBuilders.Builders[RectangleComponents.Rectangle]
@@ -27,7 +31,7 @@ public class RectangleXmlNumberedGenerator
                     , componentBuilders.Builders[RectangleComponents.Velocity]
                     , componentBuilders.Builders[RectangleComponents.Size]
             }
-            , int.Parse(_composite.Components[RectangleComponents.Color].BasicParts[XmlObjectParts.ObjectPosition]));
+            , int.Parse(position));
         fileComposite = new FileParts();
         fileBuilder = new XmlFileNumberedBuilder(
             new IText[] { objectBuilder.CreateXml() }

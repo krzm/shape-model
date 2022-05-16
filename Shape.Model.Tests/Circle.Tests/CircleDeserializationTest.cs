@@ -9,9 +9,7 @@ public class CircleDeserializationTest
     public void CircleSerialization()
     {
         var test = SetupTest();
-
         test.InvokeTest();
-
         Assert.Equal(test.Expected, test.Acctual);
     }
 
@@ -28,7 +26,7 @@ public class CircleDeserializationTest
 
         var massCenter = new Point(10, 10);
         var circle = new ShapeFactory().GetBlackBall(massCenter) as Circle;
-
+        ArgumentNullException.ThrowIfNull(circle);
         IDeserializationTestScheme<Circle> testScheme =
         new DeserializationTestScheme<Circle>(
                 new SerializerXml()

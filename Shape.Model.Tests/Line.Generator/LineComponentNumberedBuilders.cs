@@ -18,8 +18,13 @@ public class LineComponentNumberedBuilders
         , bool isEndingWithNewLine = true)
     {
         var data = Composite.Components[type];
-        return new XmlObjectNumberedBuilder(data.BasicParts
-            , data.Properties
+        var parts = data.BasicParts;
+        ArgumentNullException.ThrowIfNull(parts);
+        var props = data.Properties;
+        ArgumentNullException.ThrowIfNull(props);
+        return new XmlObjectNumberedBuilder(
+            parts
+            , props
             , propertyParserFactory
             , isEndingWithNewLine);
     }

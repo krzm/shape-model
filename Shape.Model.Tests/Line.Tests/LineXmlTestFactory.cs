@@ -7,10 +7,15 @@ public class LineXmlTestFactory
 {
     public override string FileName => "LineSerialization";
 
-    public LineXmlTestFactory(IText expectedXml) : base(expectedXml)
+    public LineXmlTestFactory(IText expectedXml)
+        : base(expectedXml)
     {
     }
 
-    protected override Line ProduceShape() =>
-        new ShapeFactory().GetTestLine() as Line;
+    protected override Line ProduceShape()
+    {
+        var shape = new ShapeFactory().GetTestLine() as Line;
+        ArgumentNullException.ThrowIfNull(shape);
+        return shape;
+    }
 }

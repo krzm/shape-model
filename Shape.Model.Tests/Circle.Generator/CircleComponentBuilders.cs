@@ -5,13 +5,15 @@ namespace Shape.Model.Tests;
 public class CircleComponentBuilders
     : ComponentBuilders<CircleComponents>
 {
-    private readonly Func<string[], IXmlParser> _propertyParserFactory;
+    private readonly Func<string[], IXmlParser> propertyParserFactory;
 
     public CircleComponentBuilders(
         IComponents<CircleComponents, IXmlSerializedObjectData> composite
-        , Func<string[], IXmlParser> propertyParserFactory) : base(composite)
+        , Func<string[], IXmlParser> propertyParserFactory)
+            : base(composite)
     {
-        _propertyParserFactory = propertyParserFactory ?? throw new ArgumentNullException(nameof(propertyParserFactory));
+        this.propertyParserFactory = propertyParserFactory ??
+            throw new ArgumentNullException(nameof(propertyParserFactory));
     }
 
     public override void Build()
@@ -20,23 +22,23 @@ public class CircleComponentBuilders
             CircleComponents.Circle
             , CreateBuilder(
                 CircleComponents.Circle
-                , _propertyParserFactory
+                , propertyParserFactory
                 , false));
         Builders.Add(
             CircleComponents.Color
             , CreateBuilder(
                 CircleComponents.Color
-                , _propertyParserFactory));
+                , propertyParserFactory));
         Builders.Add(
             CircleComponents.MassCenter
             , CreateBuilder(
                 CircleComponents.MassCenter
-                , _propertyParserFactory));
+                , propertyParserFactory));
         Builders.Add(
             CircleComponents.Velocity
             , CreateBuilder(
                 CircleComponents.Velocity
-                , _propertyParserFactory));
+                , propertyParserFactory));
     }
 
     protected override XmlObjectWithPropsBuilder CreateBuilder(
@@ -45,9 +47,13 @@ public class CircleComponentBuilders
         , bool isEndingWithNewLine = true)
     {
         var data = Composite.Components[type];
+        var parts = data.BasicParts;
+        ArgumentNullException.ThrowIfNull(parts);
+        var props = data.Properties;
+        ArgumentNullException.ThrowIfNull(props);
         return new XmlObjectWithPropsBuilder(
-            data.BasicParts
-            , data.Properties
+            parts
+            , props
             , propertyParserFactory
             , isEndingWithNewLine);
     }

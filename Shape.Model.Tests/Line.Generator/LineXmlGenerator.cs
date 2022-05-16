@@ -5,38 +5,42 @@ namespace Shape.Model.Tests;
 public class LineXmlGenerator
     : IText
 {
-    private readonly IComponents<LineComponents, IXmlSerializedObjectData> _composite;
-    private readonly IComponentBuilders<LineComponents> _componentBuilders;
-    private readonly IXmlCompositeObjectBuilder _objectBuilder;
-    private readonly IXmlBuilder<XmlFileParts> _fileBuilder;
-    private readonly IComponents<XmlFileParts, string> _fileComposite;
+    private readonly IComponents<LineComponents, IXmlSerializedObjectData>? composite;
+    private readonly IComponentBuilders<LineComponents> componentBuilders;
+    private readonly IXmlCompositeObjectBuilder objectBuilder;
+    private readonly IXmlBuilder<XmlFileParts> fileBuilder;
+    private readonly IComponents<XmlFileParts, string> fileComposite;
 
     public LineXmlGenerator()
     {
-        _composite = new LineComposite();
-        _componentBuilders = new LineComponentBuilders(_composite
+        composite = new LineComposite();
+        componentBuilders = new LineComponentBuilders(composite
             , (property) => new XmlPropertyNumberedParser(property));
-        _componentBuilders.Build();
-        _objectBuilder = new XmlCompositeObjectBuilder(
+        componentBuilders.Build();
+        var color = composite?.Components[LineComponents.Color];
+        ArgumentNullException.ThrowIfNull(color?.BasicParts);
+        var position = color?.BasicParts[XmlObjectParts.ObjectPosition];
+        ArgumentNullException.ThrowIfNull(position);
+        objectBuilder = new XmlCompositeObjectBuilder(
             (parsers, innerObjOrder) => new XmlObject(parsers) { InnerObjectPosition = innerObjOrder }
-            , _componentBuilders.Builders[LineComponents.Line]
+            , componentBuilders.Builders[LineComponents.Line]
             , new IXmlBuilder<XmlObjectParts>[]
             {
-                    _componentBuilders.Builders[LineComponents.Color]
-                    , _componentBuilders.Builders[LineComponents.MassCenter]
-                    , _componentBuilders.Builders[LineComponents.Velocity]
-                    , _componentBuilders.Builders[LineComponents.SecondPoint]
+                    componentBuilders.Builders[LineComponents.Color]
+                    , componentBuilders.Builders[LineComponents.MassCenter]
+                    , componentBuilders.Builders[LineComponents.Velocity]
+                    , componentBuilders.Builders[LineComponents.SecondPoint]
             }
-            , int.Parse(_composite.Components[LineComponents.Color].BasicParts[XmlObjectParts.ObjectPosition]));
-        _fileComposite = new FileParts();
-        _fileBuilder = new XmlFileBuilder(
-            new IText[] { _objectBuilder.CreateXml() }
+            , int.Parse(position));
+        fileComposite = new FileParts();
+        fileBuilder = new XmlFileBuilder(
+            new IText[] { objectBuilder.CreateXml() }
             , (parts) =>
                 new XmlFileParser(
                     (headerParts) => new XmlHeaderParser(headerParts)
                     , parts)
-            , _fileComposite.Components);
+            , fileComposite.Components);
     }
 
-    public string Text => _fileBuilder.CreateXml().Text;
+    public string Text => fileBuilder.CreateXml().Text;
 }

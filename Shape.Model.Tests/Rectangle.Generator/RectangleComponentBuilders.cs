@@ -51,9 +51,13 @@ public class RectangleComponentBuilders
         , bool isEndingWithNewLine = true)
     {
         var data = Composite.Components[type];
+        var parts = data?.BasicParts;
+        var props = data?.Properties;
+        ArgumentNullException.ThrowIfNull(parts);
+        ArgumentNullException.ThrowIfNull(props);
         return new XmlObjectWithPropsBuilder(
-            data.BasicParts
-            , data.Properties
+            parts
+            , props
             , propertyParserFactory
             , isEndingWithNewLine);
     }

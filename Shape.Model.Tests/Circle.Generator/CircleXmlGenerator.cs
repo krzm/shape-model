@@ -5,37 +5,41 @@ namespace Shape.Model.Tests;
 public class CircleXmlGenerator
     : IText
 {
-    private readonly IComponents<CircleComponents, IXmlSerializedObjectData> _composite;
-    private readonly IComponentBuilders<CircleComponents> _componentBuilders;
-    private readonly IXmlCompositeObjectBuilder _objectBuilder;
-    private readonly IComponents<XmlFileParts, string> _fileComposite;
-    private readonly IXmlBuilder<XmlFileParts> _fileBuilder;
+    private readonly IComponents<CircleComponents, IXmlSerializedObjectData>? composite;
+    private readonly IComponentBuilders<CircleComponents> componentBuilders;
+    private readonly IXmlCompositeObjectBuilder objectBuilder;
+    private readonly IComponents<XmlFileParts, string> fileComposite;
+    private readonly IXmlBuilder<XmlFileParts> fileBuilder;
 
     public CircleXmlGenerator()
     {
-        _composite = new CircleComposite();
-        _componentBuilders = new CircleComponentBuilders(_composite
+        composite = new CircleComposite();
+        componentBuilders = new CircleComponentBuilders(composite
             , (property) => new XmlPropertyNumberedParser(property));
-        _componentBuilders.Build();
-        _objectBuilder = new XmlCompositeObjectBuilder(
+        componentBuilders.Build();
+        var color = composite?.Components[CircleComponents.Color];
+        ArgumentNullException.ThrowIfNull(color?.BasicParts);
+        var position = color?.BasicParts[XmlObjectParts.ObjectPosition];
+        ArgumentNullException.ThrowIfNull(position);
+        objectBuilder = new XmlCompositeObjectBuilder(
             (parsers, innerObjOrder) => new XmlObject(parsers) { InnerObjectPosition = innerObjOrder }
-            , _componentBuilders.Builders[CircleComponents.Circle]
+            , componentBuilders.Builders[CircleComponents.Circle]
             , new IXmlBuilder<XmlObjectParts>[]
             {
-                    _componentBuilders.Builders[CircleComponents.Color]
-                    , _componentBuilders.Builders[CircleComponents.MassCenter]
-                    , _componentBuilders.Builders[CircleComponents.Velocity]
+                    componentBuilders.Builders[CircleComponents.Color]
+                    , componentBuilders.Builders[CircleComponents.MassCenter]
+                    , componentBuilders.Builders[CircleComponents.Velocity]
             }
-            , int.Parse(_composite.Components[CircleComponents.Color].BasicParts[XmlObjectParts.ObjectPosition]));
-        _fileComposite = new FileParts();
-        _fileBuilder = new XmlFileBuilder(
-            new IText[] { _objectBuilder.CreateXml() }
+            , int.Parse(position));
+        fileComposite = new FileParts();
+        fileBuilder = new XmlFileBuilder(
+            new IText[] { objectBuilder.CreateXml() }
             , (parts) =>
                 new XmlFileParser(
                     (headerParts) => new XmlHeaderParser(headerParts)
                     , parts)
-            , _fileComposite.Components);
+            , fileComposite.Components);
     }
 
-    public string Text => _fileBuilder.CreateXml().Text;
+    public string Text => fileBuilder.CreateXml().Text;
 }

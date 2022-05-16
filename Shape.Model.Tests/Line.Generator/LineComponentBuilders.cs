@@ -9,9 +9,11 @@ public class LineComponentBuilders
 
     public LineComponentBuilders(
         IComponents<LineComponents, IXmlSerializedObjectData> composite
-        , Func<string[], IXmlParser> propertyParserFactory) : base(composite)
+        , Func<string[], IXmlParser> propertyParserFactory)
+            : base(composite)
     {
-        _propertyParserFactory = propertyParserFactory ?? throw new ArgumentNullException(nameof(propertyParserFactory));
+        _propertyParserFactory = propertyParserFactory ??
+            throw new ArgumentNullException(nameof(propertyParserFactory));
     }
 
     public override void Build()
@@ -39,8 +41,13 @@ public class LineComponentBuilders
         , bool isEndingWithNewLine = true)
     {
         var data = Composite.Components[type];
-        return new XmlObjectWithPropsBuilder(data.BasicParts
-            , data.Properties
+        var parts = data.BasicParts;
+        ArgumentNullException.ThrowIfNull(parts);
+        var props = data.Properties;
+        ArgumentNullException.ThrowIfNull(props);
+        return new XmlObjectWithPropsBuilder(
+            parts
+            , props
             , propertyParserFactory
             , isEndingWithNewLine);
     }

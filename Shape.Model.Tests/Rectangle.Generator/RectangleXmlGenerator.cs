@@ -5,7 +5,7 @@ namespace Shape.Model.Tests;
 public class RectangleXmlGenerator
     : IText
 {
-    private readonly IComponents<RectangleComponents, IXmlSerializedObjectData> composite;
+    private readonly IComponents<RectangleComponents, IXmlSerializedObjectData>? composite;
     private readonly IComponentBuilders<RectangleComponents> componentBuilders;
     private readonly IXmlCompositeObjectBuilder objectBuilder;
     private readonly IComponents<XmlFileParts, string> fileComposite;
@@ -17,6 +17,10 @@ public class RectangleXmlGenerator
         componentBuilders = new RectangleComponentBuilders(composite
             , (property) => new XmlPropertyNumberedParser(property));
         componentBuilders.Build();
+        var color = composite?.Components[RectangleComponents.Color];
+        ArgumentNullException.ThrowIfNull(color?.BasicParts);
+        var position = color?.BasicParts[XmlObjectParts.ObjectPosition];
+        ArgumentNullException.ThrowIfNull(position);
         objectBuilder = new XmlCompositeObjectBuilder(
             (parsers, innerObjOrder) => new XmlObject(parsers) { InnerObjectPosition = innerObjOrder }
             , componentBuilders.Builders[RectangleComponents.Rectangle]
@@ -27,7 +31,7 @@ public class RectangleXmlGenerator
                     , componentBuilders.Builders[RectangleComponents.Velocity]
                     , componentBuilders.Builders[RectangleComponents.Size]
             }
-            , int.Parse(composite.Components[RectangleComponents.Color].BasicParts[XmlObjectParts.ObjectPosition]));
+            , int.Parse(position));
         fileComposite = new FileParts();
         fileBuilder = new XmlFileBuilder(
             new IText[] { objectBuilder.CreateXml() }

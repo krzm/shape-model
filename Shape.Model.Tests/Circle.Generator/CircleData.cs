@@ -23,6 +23,7 @@ public class CircleData
     protected override void BuildBasicParts()
     {
         base.BuildBasicParts();
+        ArgumentNullException.ThrowIfNull(BasicParts);
         BasicParts[XmlObjectParts.ObjectPrefix] = "";
         BasicParts[XmlObjectParts.ObjectName] = "Circle";
         BasicParts[XmlObjectParts.PropPrefix] = "  ";
