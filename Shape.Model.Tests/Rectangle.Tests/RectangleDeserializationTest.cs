@@ -16,12 +16,14 @@ public class RectangleDeserializationTest
 
     private static IFileTestTemplate<Rectangle> SetupTest()
     {
+        var testRectangle = new ShapeFactory().GetTestRectangle() as Rectangle;
+        ArgumentNullException.ThrowIfNull(testRectangle);
         var test = new DeserializationTest<Rectangle>(
             new FilePath(@"C:\Tests\TestTempFiles", "RectangleDeserialization", "xml")
             , new DeserializationTestScheme<Rectangle>(
                 new SerializerXml()
                 , new XmlOrderedGenerator(new RectangleXmlNumberedGenerator()))
-            , new ShapeFactory().GetTestRectangle() as Rectangle);
+            , testRectangle);
         test.AssertFailEvent += (message) => Assert.True(false, message);
         test.IsRemovingTempFiles = true;
         return test;

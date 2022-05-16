@@ -10,6 +10,7 @@ public class ShapesDeserializationTest
     {
         var test = SetupDeserializationTest();
         test.InvokeTest();
+        ArgumentNullException.ThrowIfNull(test.Acctual);
         AssertShapeContext(test.Expected, test.Acctual);
     }
 
@@ -28,14 +29,20 @@ public class ShapesDeserializationTest
 
     private static ShapeContext GetShapeContext()
     {
+        var blackBall = new ShapeFactory().GetBlackBall(new Point(10, 10)) as Circle;
+        ArgumentNullException.ThrowIfNull(blackBall);
+        var testLine = new ShapeFactory().GetTestLine() as Line;
+        ArgumentNullException.ThrowIfNull(testLine);
+        var testRectangle = new ShapeFactory().GetTestRectangle() as Rectangle;
+        ArgumentNullException.ThrowIfNull(testRectangle);
         return new ShapeContext()
         {
             Shapes = new List<Shape>
-                {
-                    new ShapeFactory().GetBlackBall(new Point(10, 10)) as Circle,
-                    new ShapeFactory().GetTestLine() as Line,
-                    new ShapeFactory().GetTestRectangle() as Rectangle
-                }
+            {
+                blackBall
+                , testLine
+                , testRectangle
+            }
         };
     }
 
@@ -72,7 +79,7 @@ public class ShapesDeserializationTest
         if (type != typeof(Circle)) return;
         var expected = expectedShape as Circle;
         var acctual = acctualShape as Circle;
-        Assert.Equal(expected.Radius, acctual.Radius);
+        Assert.Equal(expected?.Radius, acctual?.Radius);
 
     }
 
@@ -81,8 +88,8 @@ public class ShapesDeserializationTest
         if (type != typeof(Line)) return;
         var expected = expectedShape as Line;
         var acctual = acctualShape as Line;
-        Assert.Equal(expected.SecondPoint, acctual.SecondPoint);
-        Assert.Equal(expected.SecondPoint2D, acctual.SecondPoint2D);
+        Assert.Equal(expected?.SecondPoint, acctual?.SecondPoint);
+        Assert.Equal(expected?.SecondPoint2D, acctual?.SecondPoint2D);
     }
 
     private static void AssertRectangle(Type type, Shape expectedShape, Shape acctualShape)
@@ -90,7 +97,7 @@ public class ShapesDeserializationTest
         if (type != typeof(Rectangle)) return;
         var expected = expectedShape as Rectangle;
         var acctual = acctualShape as Rectangle;
-        Assert.Equal(expected.Size, acctual.Size);
-        Assert.Equal(expected.Size, acctual.Size);
+        Assert.Equal(expected?.Size, acctual?.Size);
+        Assert.Equal(expected?.Size, acctual?.Size);
     }
 }

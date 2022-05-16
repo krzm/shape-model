@@ -15,6 +15,12 @@ public class ShapesSerializationTest
 
     private IFileTestTemplate<string> SetupSerializationTest()
     {
+        var blackBall = new ShapeFactory().GetBlackBall(new Point(10, 10)) as Circle;
+        ArgumentNullException.ThrowIfNull(blackBall);
+        var testLine = new ShapeFactory().GetTestLine() as Line;
+        ArgumentNullException.ThrowIfNull(testLine);
+        var testRectangle = new ShapeFactory().GetTestRectangle() as Rectangle;
+        ArgumentNullException.ThrowIfNull(testRectangle);
         IFilePath filePath = new FilePath(
             @"C:\Tests\TestTempFiles"
             , "ShapesSerialization"
@@ -26,11 +32,11 @@ public class ShapesSerializationTest
                 , new ShapeContext()
                 {
                     Shapes = new List<Shape>
-                            {
-                                    new ShapeFactory().GetBlackBall(new Point(10, 10)) as Circle,
-                                    new ShapeFactory().GetTestLine() as Line,
-                                    new ShapeFactory().GetTestRectangle() as Rectangle
-                            }
+                    {
+                        blackBall
+                        , testLine
+                        , testRectangle
+                    }
                 }
                 , new TextFileReader(filePath)),
             new ShapesDefaultSchema());

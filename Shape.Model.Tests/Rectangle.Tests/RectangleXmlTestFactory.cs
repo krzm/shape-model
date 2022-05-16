@@ -12,6 +12,10 @@ public class RectangleXmlTestFactory
     {
     }
 
-    protected override Rectangle ProduceShape() =>
-        new ShapeFactory().GetTestRectangle() as Rectangle;
+    protected override Rectangle ProduceShape()
+    {
+        var shape = new ShapeFactory().GetTestRectangle() as Rectangle;
+        ArgumentNullException.ThrowIfNull(shape);
+        return shape;
+    }
 }

@@ -6,16 +6,11 @@ using System.Xml.Serialization;
 namespace Shape.Model.Tests.CustomList;
 
 public class Color
-        : IXmlSerializable
+    : IXmlSerializable
 {
     public int Value { get; set; }
 
-    public Color()
-    {
-
-    }
-
-    public XmlSchema GetSchema() => null;
+    public XmlSchema GetSchema() => new XmlSchema();
 
     public void ReadXml(XmlReader reader)
     {

@@ -32,11 +32,16 @@ public partial class SimpleCustomListSerializationTest
     private static MoneyContext GetMoneyContext() => new MoneyContext
     {
         Valueables = new List<Money>()
-                    {
-                        new Gold { Type = "Hard money", WeightInOunces = 1, Color = new Color { Value = 999 } }
-                        , new Dolar { Type = "Fiat money", FaceValue = 2 }
-                        , new Dolar { Type = "Fiat money", FaceValue = 3 }
-                    }
+        {
+            new Gold 
+            { 
+                Type = "Hard money"
+                , WeightInOunces = 1
+                , Color = new Color { Value = 999 } 
+            }
+            , new Dolar { Type = "Fiat money", FaceValue = 2 }
+            , new Dolar { Type = "Fiat money", FaceValue = 3 }
+        }
     };
 
     [Fact]
@@ -73,8 +78,8 @@ public partial class SimpleCustomListSerializationTest
         if (type != typeof(Gold)) return;
         var expected = expectedMoney as Gold;
         var acctual = acctualMoney as Gold;
-        Assert.Equal(expected.WeightInOunces, acctual.WeightInOunces);
-        Assert.Equal(expected.Color.Value, acctual.Color.Value);
+        Assert.Equal(expected?.WeightInOunces, acctual?.WeightInOunces);
+        Assert.Equal(expected?.Color.Value, acctual?.Color.Value);
     }
 
     private static void AssertDolor(Type type, Money expectedMoney, Money acctualMoney)
@@ -82,6 +87,6 @@ public partial class SimpleCustomListSerializationTest
         if (type != typeof(Dolar)) return;
         var expected = expectedMoney as Dolar;
         var acctual = acctualMoney as Dolar;
-        Assert.Equal(expected.FaceValue, acctual.FaceValue);
+        Assert.Equal(expected?.FaceValue, acctual?.FaceValue);
     }
 }

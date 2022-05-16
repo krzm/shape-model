@@ -11,8 +11,12 @@ public class Vector2IndirectSerializationTest
         Vector2 expected) : base(filePath, serializer, expected)
     { }
 
-    protected override Vector2 CreateImmutableType() =>
-        new Vector2(DeserializedMediator.X, DeserializedMediator.Y);
+    protected override Vector2 CreateImmutableType()
+    {
+        ArgumentNullException.ThrowIfNull(DeserializedMediator);
+        return new Vector2(DeserializedMediator.X, DeserializedMediator.Y);
+    }
+        
 
     protected override Vector2Serializable CreateMediatorType() =>
         new Vector2Serializable { X = Expected.X, Y = Expected.Y };

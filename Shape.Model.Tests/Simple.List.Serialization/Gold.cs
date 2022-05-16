@@ -5,5 +5,5 @@ public class Gold
 {
     public int WeightInOunces { get; set; }
 
-    public Color Color { get; set; }
+    public Color? Color { get; set; }
 }

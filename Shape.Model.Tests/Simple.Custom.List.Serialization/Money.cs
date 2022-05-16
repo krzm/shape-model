@@ -7,14 +7,9 @@ namespace Shape.Model.Tests.CustomList;
 public abstract class Money
     : IXmlSerializable
 {
-    public string Type { get; set; }
+    public string? Type { get; set; }
 
-    public Money()
-    {
-
-    }
-
-    public XmlSchema GetSchema() => null;
+    public XmlSchema GetSchema() => new XmlSchema();
 
     public virtual void ReadXml(XmlReader reader)
     {
@@ -23,6 +18,6 @@ public abstract class Money
 
     public virtual void WriteXml(XmlWriter writer)
     {
-        writer.WriteElementString(nameof(Type), Type.ToString());
+        writer.WriteElementString(nameof(Type), Type?.ToString());
     }
 }

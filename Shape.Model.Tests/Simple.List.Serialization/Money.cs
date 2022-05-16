@@ -6,5 +6,5 @@ namespace Shape.Model.Tests;
 [XmlInclude(typeof(Dolor))]
 public abstract class Money
 {
-    public string Type { get; set; }
+    public string? Type { get; set; }
 }

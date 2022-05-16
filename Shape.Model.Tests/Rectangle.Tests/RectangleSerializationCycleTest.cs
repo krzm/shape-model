@@ -16,10 +16,12 @@ public class RectangleSerializationCycleTest
 
     private static IFileTestTemplate<Rectangle> SetupTest()
     {
+        var testRectangle = new ShapeFactory().GetTestRectangle() as Rectangle;
+        ArgumentNullException.ThrowIfNull(testRectangle);
         var test = new SerializationCycleTest<Rectangle>(
-            new FilePath(@"C:\Tests\TestTempFiles", "RectangleFullSerialization", "xml"),
-            new SerializerXml(),
-            new ShapeFactory().GetTestRectangle() as Rectangle);
+            new FilePath(@"C:\Tests\TestTempFiles", "RectangleFullSerialization", "xml")
+            , new SerializerXml()
+            , testRectangle);
         test.AssertFailEvent += (message) => Assert.True(false, message);
         test.IsRemovingTempFiles = true;
         return test;
