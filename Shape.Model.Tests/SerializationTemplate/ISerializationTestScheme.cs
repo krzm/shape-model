@@ -1,4 +1,6 @@
-﻿namespace Shape.Model.Tests;
+﻿using Sim.Core;
+
+namespace Shape.Model.Tests;
 
 public interface ISerializationTestScheme
 {

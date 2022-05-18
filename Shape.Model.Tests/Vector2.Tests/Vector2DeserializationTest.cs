@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Sim.Core;
 using Vector.Lib;
 using Xml.Generator;
 using Xunit;

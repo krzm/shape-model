@@ -1,4 +1,5 @@
-﻿using Xml.Generator;
+﻿using Sim.Core;
+using Xml.Generator;
 
 namespace Shape.Model.Tests;
 

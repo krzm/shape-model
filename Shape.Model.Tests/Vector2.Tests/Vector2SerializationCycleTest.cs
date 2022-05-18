@@ -1,4 +1,5 @@
-﻿using Vector.Lib;
+﻿using Sim.Core;
+using Vector.Lib;
 using Xunit;
 
 namespace Shape.Model.Tests;

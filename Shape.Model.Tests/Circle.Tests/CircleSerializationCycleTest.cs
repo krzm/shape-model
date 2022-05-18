@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using Sim.Core;
 using Xunit;
 
 namespace Shape.Model.Tests;

@@ -1,4 +1,4 @@
-﻿using System.Windows.Controls;
+﻿using Sim.Core;
 using Xml.Generator;
 using Xunit;
 
